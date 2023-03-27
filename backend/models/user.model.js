@@ -2,7 +2,7 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-  Name: {
+  name: {
     type: String,
     trim: true,
     requeired: "Name is required",
@@ -38,7 +38,7 @@ UserSchema.virtual("password")
 
 UserSchema.methods = {
   authenticate: function (plainText) {
-    return this.hashed_password === this.encryptPassword(plainText);
+    return this.encryptPassword(plainText)===this.hashed_password;
   },
   encryptPassword: function (password) {
     if (!password) return "";
@@ -61,7 +61,7 @@ UserSchema.path("hashed_password").validate(function (v) {
     this.invalidate("password", "Password must be at least 6 characters.");
   }
   if (this.isNew && !this._password) {
-    this.invalidate("password", "Password is required");
+    this.invalidate("password", "Password is required here");
   }
 }, null);
 
