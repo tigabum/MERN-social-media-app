@@ -1,5 +1,10 @@
-import dbErrorHandler from "../helpers/dbErrorHandler";
-import User from "../models/user.model";
+// import dbErrorHandler from "../helpers/dbErrorHandler";
+const {dbErrorHandler} = require('../helpers/dbErrorHandler')
+// import User from "../models/user.model";
+const User = require('../models/user.model')
+
+// import extend from "lodash/extend";
+const extend = require('lodash/extend')
 
 const Create = async (req, res) => {
   const user = new User(req.body);
@@ -10,7 +15,7 @@ const Create = async (req, res) => {
     });
   } catch (err) {
     return res.status(400).json({
-      message: dbErrorHandler.getErrorMessage(err),
+      error: dbErrorHandler.getErrorMessage(err),
     });
   }
 };
@@ -21,17 +26,60 @@ const List = async (req, res) => {
     return res.json(users);
   } catch (err) {
     return res.status(400).json({
-      message: dbErrorHandler.getErrorMessage(err),
+      error: dbErrorHandler.getErrorMessage(err),
     });
   }
 };
 
-const Update = (req, res) => {};
+const Update = async (req, res) => {
+  try {
+    let user = req.profile;
+    user = extend(user, req.body);
+    user.updated = Date.now();
+    await user.save();
+    user.hashed_password = undefined;
+    user.salt = undefined;
+    res.json(user);
+  } catch (err) {
+    return res.status(400).json({
+      error: dbErrorHandler.getErrorMessage(err),
+    });
+  }
+};
 
-const Remove = (req, res) => {};
+const Remove = async (req, res) => {
+  try {
+    let user = req.profile;
+    await user.remove();
+    user.hashed_password = undefined;
+    user.salt = undefined;
+    res.json(user);
+  } catch (err) {
+    return res.status(400).json({
+      error: dbErrorHandler.getErrorMessage(err),
+    });
+  }
+};
 
-const Read = (req, res) => {};
+const Read = (req, res) => {
+  req.profile.hashed_password = undefined;
+  req.profile.salt = undefined;
+  return res.json(req.profile);
+};
 
-const userById = (req, res) => {};
+const userById = async (req, res, next, id) => {
+  try {
+    let user = await User.findById(id);
 
-export default { Create, List, Update, Remove, Read, userById };
+    if (!user) return res.status(400).json({ error: "User is not found!" });
+    req.profile = user;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Couldn't retrieve user",
+    });
+  }
+};
+
+// export default { Create, List, Update, Remove, Read, userById };
+module.exports = {Create, List, Update, Remove, Read, userById}
