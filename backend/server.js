@@ -1,6 +1,9 @@
-import config from "./config/config.js";
-import app from "./express.js";
-import mongoose from "mongoose";
+// import config from "./config/config.js";
+const config = require('./config/config')
+// import app from "./express.js";
+const app = require('./express')
+// import mongoose from "mongoose";
+const mongoose = require('mongoose')
 
 // Setting up Mongoose and connecting to mongodb
 mongoose.connect(
