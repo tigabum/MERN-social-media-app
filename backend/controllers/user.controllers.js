@@ -1,5 +1,5 @@
 // import dbErrorHandler from "../helpers/dbErrorHandler";
-const {dbErrorHandler} = require('../helpers/dbErrorHandler')
+const dbErrorHandler = require('../helpers/dbErrorHandler')
 // import User from "../models/user.model";
 const User = require('../models/user.model')
 
@@ -7,6 +7,7 @@ const User = require('../models/user.model')
 const extend = require('lodash/extend')
 
 const Create = async (req, res) => {
+    console.log("req is", req.body)
   const user = new User(req.body);
   try {
     await user.save();
@@ -14,6 +15,7 @@ const Create = async (req, res) => {
       message: "Successfully user created",
     });
   } catch (err) {
+      console.log("error is", err)
     return res.status(400).json({
       error: dbErrorHandler.getErrorMessage(err),
     });
