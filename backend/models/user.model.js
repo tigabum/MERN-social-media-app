@@ -1,11 +1,12 @@
 // import mongoose from "mongoose";
 const mongoose = require('mongoose')
+const crypto = require('crypto')
 
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    requeired: "Name is required",
+    required: "Name is required",
   },
   email: {
     type: String,
@@ -21,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   updated: Date,
   hashed_password: {
     type: String,
-    required: "Password is required",
+    required: "Password is required in",
   },
   salt: String,
 });
@@ -38,7 +39,7 @@ UserSchema.virtual("password")
 
 UserSchema.methods = {
   authenticate: function (plainText) {
-    return this.encryptPassword(plainText)===this.hashed_password;
+    return this.encryptPassword(plainText) == this.hashed_password;
   },
   encryptPassword: function (password) {
     if (!password) return "";
@@ -52,7 +53,7 @@ UserSchema.methods = {
     }
   },
   makeSalt: function () {
-    return Math.round(new Date().valueOf * Math.random()) + "";
+    return Math.round((new Date().valueOf * Math.random())) + "";
   },
 };
 

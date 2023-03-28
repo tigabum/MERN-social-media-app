@@ -4,18 +4,21 @@ const jwt = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
 
 const signIn = async (req, res) => {
+  console.log("singing data", req.body)
   try {
     var user = await User.findOne({ email: req.body.email });
+    console.log('user is available', user)
     if (!user) return res.status(401).json({ error: "User not found" });
-    if (!user.authenticate) {
+    console.log("authenticate", user.authenticate(req.body.password))
+    if (!user.authenticate(req.body.password)) {
       return res
         .status(401)
         .send({ error: "Email and password doesn't match" });
     }
-    const token = jwt.sign(
-      { _id: user._id },
-      { secret: config.jwtSecret, algorithms: ["HS256"] }
-    );
+
+
+    const token = jwt.sign({ _id: user._id }, config.jwtSecret)
+
     res.cookie("t", token, { expire: new Date() + 9999 });
     return res.json({
       token,
