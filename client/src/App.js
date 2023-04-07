@@ -1,10 +1,18 @@
+import React from 'react';
+import theme from "./theme";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { BrowserRouter } from "react-router-dom";
 
-function App() {
+import MainRouter from "./MainRouter";
+
+const App = () => {
   return (
-    <div>
-      <h1>Front end</h1>
-    </div>
-  );
+    <BrowserRouter>
+    <ThemeProvider theme={theme}>
+    <MainRouter/>
+    </ThemeProvider>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
