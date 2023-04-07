@@ -4,12 +4,9 @@ const jwt = require("jsonwebtoken");
 const { expressjwt } = require("express-jwt");
 
 const signIn = async (req, res) => {
-  console.log("singing data", req.body)
   try {
     var user = await User.findOne({ email: req.body.email });
-    console.log('user is available', user)
     if (!user) return res.status(401).json({ error: "User not found" });
-    console.log("authenticate", user.authenticate(req.body.password))
     if (!user.authenticate(req.body.password)) {
       return res
         .status(401)
