@@ -58,7 +58,7 @@ const User = () => {
         {users?.map((userItem, i) => {
           return (
             <Link to={`/users/${userItem._id}`}>
-              <ListItem key={i} button>
+              <ListItem key={i+userItem} button>
                 <ListItemAvatar>
                   <Avatar
                     alt="Profile Pic"

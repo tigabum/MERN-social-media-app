@@ -1,12 +1,13 @@
+const URL = 'http://localhost:5000'
 const signin = async (user) => {
   try {
-    let response = await fetch("/api/v1/auth/signin", {
+    let response = await fetch(URL + "/api/v1/auth/signin", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      credentials: "include",
+
       body: JSON.stringify(user),
     });
 
@@ -18,7 +19,7 @@ const signin = async (user) => {
 
 const signout = async () => {
   try {
-    let response = await fetch("/api/v1/auth/signout", { method: "GET" });
+    let response = await fetch(URL + "/api/v1/auth/signout", { method: "GET" });
     return await response.json();
   } catch (err) {
     console.log(err);
